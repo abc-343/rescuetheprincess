@@ -2,6 +2,7 @@ package com.champlain.soft.game;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -81,6 +82,17 @@ public class Gameboard extends Application {
 
         //block movement into walls
         if (matrix[newRow][newCol] == CellType.WALL) return;
+
+
+        //win condition
+        if (matrix[newRow][newCol] == CellType.PRINCESS) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Victory");
+            alert.setHeaderText(null);
+            alert.setContentText("You rescued the princess!");
+            alert.showAndWait();
+        }
+
 
         //update
         matrix[playerRow][playerCol] = CellType.GRASS;
