@@ -30,11 +30,16 @@ public class Gameboard extends Application {
     // 🔹 Use "matrix" instead of "map"
     private CellType[][] matrix = new CellType[ROWS][COLS];
 
+    private GridPane grid;
+
     private Image imgGrass;
     private Image imgWall;
     private Image imgPlayer;
     private Image imgPrincess;
     private Image imgBomb;
+
+    private int playerRow = 1;
+    private int playerCol = 1;
 
     @Override
     public void start(Stage stage) {
@@ -47,7 +52,7 @@ public class Gameboard extends Application {
 
         initMatrix();
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         drawBoard(grid);
 
         BorderPane root = new BorderPane();
@@ -56,9 +61,34 @@ public class Gameboard extends Application {
 
         Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
 
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case DOWN  -> movePlayer(1,  0);
+                case RIGHT -> movePlayer(0,  1);
+                case LEFT  -> movePlayer(0, -1);
+                case UP    -> movePlayer(-1, 0);
+            }
+        });
+
         stage.setTitle("Rescue the Princess");
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void movePlayer(int dRow, int dCol) {
+        int newRow = playerRow + dRow;
+        int newCol = playerCol + dCol;
+
+        //block movement into walls
+        if (matrix[newRow][newCol] == CellType.WALL) return;
+
+        //update
+        matrix[playerRow][playerCol] = CellType.GRASS;
+        playerRow = newRow;
+        playerCol = newCol;
+        matrix[playerRow][playerCol] = CellType.PLAYER;
+
+        drawBoard(grid);
     }
 
 
