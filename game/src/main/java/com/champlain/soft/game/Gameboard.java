@@ -10,6 +10,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import javafx.scene.media.AudioClip;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,6 +46,8 @@ public class Gameboard extends Application {
 
     private int lives = 3;
     private boolean gameOver = false;
+
+    private AudioClip bombSound;
 
     @Override
     public void start(Stage stage) {
@@ -83,6 +87,8 @@ public class Gameboard extends Application {
         int newRow = playerRow + dRow;
         int newCol = playerCol + dCol;
 
+        bombSound = new AudioClip(getClass().getResource("/sounds/explosion.wav").toExternalForm());
+
         //block movement into walls
         if (matrix[newRow][newCol] == CellType.WALL) return;
 
@@ -97,6 +103,7 @@ public class Gameboard extends Application {
         }
 
         if (matrix[newRow][newCol] == CellType.BOMB) {
+            bombSound.play();
             lives--;
             matrix[newRow][newCol] = CellType.GRASS; //now remove the bomb
 

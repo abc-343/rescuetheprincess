@@ -32,7 +32,7 @@ application {
 
 javafx {
     version = "22.0.1"
-    modules = listOf("javafx.controls", "javafx.fxml")
+    modules = listOf("javafx.controls", "javafx.fxml", "javafx.media")
 }
 
 dependencies {
@@ -42,6 +42,7 @@ dependencies {
     }
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    implementation("org.openjfx:javafx-media:22")
 }
 
 tasks.withType<Test> {
