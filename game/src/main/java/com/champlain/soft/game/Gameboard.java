@@ -42,14 +42,17 @@ public class Gameboard extends Application {
     private int playerRow = 1;
     private int playerCol = 1;
 
+    private int lives = 3;
+    private boolean gameOver = false;
+
     @Override
     public void start(Stage stage) {
 
-        imgGrass    = new Image(getClass().getResourceAsStream("/images/grass.png"));
-        imgWall     = new Image(getClass().getResourceAsStream("/images/wall.png"));
-        imgPlayer   = new Image(getClass().getResourceAsStream("/images/gardian.png"));
+        imgGrass = new Image(getClass().getResourceAsStream("/images/grass.png"));
+        imgWall = new Image(getClass().getResourceAsStream("/images/wall.png"));
+        imgPlayer = new Image(getClass().getResourceAsStream("/images/gardian.png"));
         imgPrincess = new Image(getClass().getResourceAsStream("/images/princess.png"));
-        imgBomb     = new Image(getClass().getResourceAsStream("/images/bomb.png"));
+        imgBomb= new Image(getClass().getResourceAsStream("/images/bomb.png"));
 
         initMatrix();
 
@@ -64,10 +67,10 @@ public class Gameboard extends Application {
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
-                case DOWN  -> movePlayer(1,  0);
-                case RIGHT -> movePlayer(0,  1);
-                case LEFT  -> movePlayer(0, -1);
-                case UP    -> movePlayer(-1, 0);
+                case DOWN -> movePlayer(1,0);
+                case RIGHT -> movePlayer(0,1);
+                case LEFT -> movePlayer(0,-1);
+                case UP -> movePlayer(-1,0);
             }
         });
 
@@ -93,6 +96,28 @@ public class Gameboard extends Application {
             alert.showAndWait();
         }
 
+        if (matrix[newRow][newCol] == CellType.BOMB) {
+            lives--;
+            matrix[newRow][newCol] = CellType.GRASS; //now remove the bomb
+
+            if (lives <= 0) {
+                gameOver = true;
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Game Over");
+                alert.setHeaderText(null);
+                alert.setContentText("You are dead! Game over.");
+                alert.showAndWait();
+                return;
+            }
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Boom");
+            alert.setHeaderText(null);
+            alert.setContentText("You hit a bomb! Lives left: " + lives);
+            alert.showAndWait();
+        }
+
+        if (gameOver) return;
 
         //update
         matrix[playerRow][playerCol] = CellType.GRASS;
@@ -102,8 +127,6 @@ public class Gameboard extends Application {
 
         drawBoard(grid);
     }
-
-
 
     private void initMatrix() {
         //fill everything with grass first
